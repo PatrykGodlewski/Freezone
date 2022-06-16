@@ -1,3 +1,5 @@
+import Button from '@components/atoms/Button/Button';
+import Card from '@components/molecules/Card/Card';
 import Image from 'next/image';
 import React from 'react';
 
@@ -7,25 +9,40 @@ const GAMES = [
     title: 'Hitman',
     description: 'Gra o łysym chłopie',
   },
+  {
+    id: '2',
+    title: 'Hitman',
+    description: 'Gra o łysym chłopie',
+  },
+  {
+    id: '3',
+    title: 'Hitman',
+    description: 'Gra o łysym chłopie',
+  },
+  {
+    id: '4',
+    title: 'Hitman',
+    description: 'Gra o łysym chłopie',
+  },
 ];
 
 const PromotedFreeGames = () => {
   return (
-    <div>
-      <h1 className="font-bold">Promoted Free Games</h1>
-      <ul className="card-list flex">
+    <div className=" ">
+      <h1 className="font-black text-5xl">Promoted Free Games</h1>
+      <ul className="card-list grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8  p-8 ">
         {GAMES.map(
           ({ id, title, description }, index): React.ReactNode => (
-            <li
+            <Card
+              type={'game'}
               key={index}
-              className="card rounded border-gray-400 dark:border-gray-600 bg-transparent flex flex-col w-1/5 p-4"
-            >
-              <h2 className="font-bold">{`${title} - #${id}`}</h2>
-              <p>{description}</p>
-              <button>Check out</button>
-            </li>
+              id={id}
+              title={title}
+              description={description}
+            />
           )
         )}
+        <Card type={'trail'} />
       </ul>
     </div>
   );

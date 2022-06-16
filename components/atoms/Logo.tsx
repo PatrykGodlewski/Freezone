@@ -3,10 +3,10 @@ import Link from 'next/link';
 
 const Logo = () => {
   return (
-    <Link href="/" className="flex items-center ">
-      <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white cursor-pointer">
+    <Link href="/" className="flex items-center">
+      <a className="self-center text-xl font-semibold whitespace-nowrap dark:text-white cursor-pointer transition hover:bg-gray-100 dark:hover:bg-gray-800 p-4 rounded-md focus:outline focus:outline-1 focus:ring focus-visible:outline focus-visible:outline-1 focus-visible:outline-gray-50 focus-visible:ring ">
         Freezone
-      </span>
+      </a>
     </Link>
   );
 };

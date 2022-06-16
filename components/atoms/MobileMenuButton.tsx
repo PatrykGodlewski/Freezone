@@ -2,7 +2,7 @@ import React from 'react';
 
 const MobileMenuButton = () => {
   return (
-    <div className="flex items-center md:order-2">
+    <div className="flex items-center md:hidden">
       <button
         data-collapse-toggle="mobile-menu-2"
         type="button"

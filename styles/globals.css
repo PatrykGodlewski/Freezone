@@ -3,8 +3,12 @@
 @tailwind utilities;
 
 @layer base {
-  html,
   body {
-    @apply bg-white dark:bg-gray-900 dark:text-gray-50 font-sans;
+    @apply dark:bg-gray-900 bg-white text-gray-800  dark:text-gray-50 font-sans;
+  }
+}
+@layer utilities {
+  .ring-hover-effect {
+    @apply transition-all hover:ring-2 ring-offset-4 dark:ring-offset-gray-900  ring-offset-gray-50 dark:ring-gray-200 ring-gray-800;
   }
 }
