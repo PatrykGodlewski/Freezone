@@ -1,17 +1,10 @@
 .theme-toggle--button {
-  --button-diameter: 60px;
-  --shape-size: 15px;
-  --color: #353175;
-  border: none;
-  outline: none;
-  display: flex;
+  --button-diameter: 2.75rem;
+  --shape-size: 14px;
+  --color: rgb(31 41 55);
   cursor: pointer;
-  border-radius: 50%;
   position: relative;
-  align-items: center;
-  background-color: #fff;
-  justify-content: center;
-  transition: box-shadow 500ms;
+  transition: box-shadow 500ms, all 200ms;
   font-size: var(--shape-size);
   width: var(--button-diameter);
   height: var(--button-diameter);
@@ -74,5 +67,5 @@
 .theme-toggle--button .shape.sun ~ .rays--container .ray {
   width: 0.334em;
   height: 1.667em;
-  background-color: white;
+  background-color: rgb(31 41 55);
 }
