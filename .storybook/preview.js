@@ -17,6 +17,8 @@ const style = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+  background: 'black',
+  fontFamily: 'Montserrat',
 };
 
 export const decorators = [

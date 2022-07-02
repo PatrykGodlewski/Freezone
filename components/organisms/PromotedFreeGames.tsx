@@ -28,8 +28,10 @@ const GAMES = [
 
 const PromotedFreeGames = () => {
   return (
-    <div className="px-8">
-      <h1>Promoted Free Games</h1>
+    <div className='px-8'>
+      <h1>
+        Promoted Free Games
+      </h1>
       <ul className="card-list grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8  p-8 ">
         {GAMES.map(
           ({ id, title, description }, index): React.ReactNode => (
