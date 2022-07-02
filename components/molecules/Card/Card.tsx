@@ -30,7 +30,7 @@ const Card = ({ title, id, description, type }: PropsType) => {
                 <img
                   src={'https://via.placeholder.com/468x600'}
                   alt="Game preview img"
-                  className="rounded-t"
+                  className="rounded"
                 />
               </div>
               <Link href={`/gamedetails/${id}`}>

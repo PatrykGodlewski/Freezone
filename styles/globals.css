@@ -4,11 +4,18 @@
 
 @layer base {
   body {
-    @apply dark:bg-gray-900 bg-white text-gray-800  dark:text-gray-50 font-sans;
+    @apply dark:bg-gray-900 bg-white text-gray-800  dark:text-gray-50 font-montserrat;
+  }
+
+  h1 {
+    @apply font-black text-5xl text-center mb-12;
+  }
+  h2 {
+    @apply font-bold text-3xl;
   }
 }
 @layer utilities {
   .ring-hover-effect {
-    @apply transition-all hover:ring-2 ring-offset-4 dark:ring-offset-gray-900  ring-offset-gray-50 dark:ring-gray-200 ring-gray-800;
+    @apply transition-all   hover:ring-2 ring-offset-4 dark:ring-offset-gray-900  ring-offset-gray-50 dark:ring-gray-200 ring-gray-800;
   }
 }

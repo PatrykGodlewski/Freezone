@@ -7,10 +7,18 @@ module.exports = {
   ],
   darkMode: 'class', // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      backdropFilter: {
+        none: 'none',
+        blur: 'blur(20px)',
+      },
+      fontFamily: {
+        montserrat: ['Montserrat'],
+      },
+    },
   },
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require('tailwindcss-filters')],
 };
