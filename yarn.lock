@@ -2481,6 +2481,18 @@
     regenerator-runtime "^0.13.7"
     resolve-from "^5.0.0"
 
+"@supercharge/collections@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@supercharge/collections/-/collections-4.3.0.tgz#3a0a276f6f1a41c8af4aaf84b56ddbd8e1eed690"
+  integrity sha512-l6JXO3UXXGKR6N7IOHSsYw6EGtzhrGyUPGMVwEb8/APdMGtjvoERy6xdMm1bEb2nPoa1UBauCIBqXE0mtkAZjQ==
+  dependencies:
+    "@supercharge/queue-datastructure" "~2.1.0"
+
+"@supercharge/queue-datastructure@~2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@supercharge/queue-datastructure/-/queue-datastructure-2.1.0.tgz#45b4044ec82d18be4511168ba760d7884708fcaf"
+  integrity sha512-lPgGZye7Pn5lZO6SA2Dc2enoLZaiTgB/l7V3JDKJNfz9S7GKtnaNKitWL9wMTvBNvh3gkEj9Ayztfa3uqCMJtw==
+
 "@testing-library/dom@^8.3.0":
   version "8.13.0"
   resolved "https://registry.npmjs.org/@testing-library/dom/-/dom-8.13.0.tgz"
