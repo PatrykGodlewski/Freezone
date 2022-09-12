@@ -11,12 +11,14 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@prisma/client": "^3.15.2",
+    "@prisma/client": "^4.3.1",
     "@supercharge/collections": "^4.3.0",
     "next": "12.1.6",
+    "progress": "^2.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
+    "steamapi": "^2.2.0",
     "tailwindcss-filters": "^3.0.0"
   },
   "devDependencies": {

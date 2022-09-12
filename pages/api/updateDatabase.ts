@@ -1,60 +1,92 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@utils/db.server';
-import { seperateIds, chunk } from '@utils/utils.server';
+import ProgressBar from 'progress';
+import SteamAPI from 'steamapi';
 
-type Data = {
-  name: string;
+import Logger from '@utils/Logger';
+import { db } from '@utils/db.server';
+
+type ResponseData = [
+  {
+    type: string;
+    name: string;
+    steam_appid: number;
+    is_free: string;
+  }
+];
+
+const steamApi = new SteamAPI(process.env.STEAM_API_KEY);
+
+const UPDATE_DELAY = 5 * 60 * 1000;
+const LIST_INFO = {
+  date: JSON.stringify(new Date()),
+  lastIndex: 0,
+};
+
+let busy = false;
+let bar: ProgressBar;
+
+const makeLoadingBar = (barLenght: number) => {
+  return new ProgressBar('-> Processing [:bar] :percent :etas ', {
+    total: barLenght,
+    width: 30,
+  });
 };
 
 export default async function updateDatabase(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<ResponseData>,
+  listIndexForRecurse = 0
 ) {
+  if (busy) return;
+  // console.log(req);
+  // console.log(req.method);
+  // console.log(req.aborted);
+  // checks for: SECRET, METHOD, DATE, HOW MUCH REQUESTS(MUST BE ONLY ONE GOIN ON AT THE TIME)
+  console.log(listIndexForRecurse);
   try {
-    const appListResponse = await fetch(
-      `http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=${process.env.STEAM_API_KEY}&format=json`
-    );
-    const appListData = await appListResponse.json();
+    const appListUnSliced = await steamApi.getAppList();
+    const appList = appListUnSliced.slice(listIndexForRecurse);
 
-    const arrOfIds = await seperateIds(appListData);
-    const chunks = await chunk(arrOfIds, 500);
-    // BLOK START
-    // TODO: add steam_app_id to array
-    // TODO: dac do pętli i iterowac po długosci tablicy chunks i wyswietlic wszystkie darmower gierki
+    const gamesResolved = [];
 
-    let allGamesPromises = [];
-    let i = 0;
-    const iterateThroAllGamesFetch = () => {
-      setTimeout(async () => {
-        const data = await fetch(
-          `https://store.steampowered.com/api/appdetails/?appids=${chunks[
-            i
-          ].toString()}&key=${
-            process.env.STEAM_API_KEY
-          }&format=json&filters=price_overview`
-        );
+    if (!bar) {
+      bar = makeLoadingBar(appListUnSliced.length);
+    }
 
-        await allGamesPromises.push(data);
-        i++;
-        if (i < 3) {
-          iterateThroAllGamesFetch();
+    for (const [index, { appid, name }] of appList.entries()) {
+      busy = true;
+      if (index <= listIndexForRecurse) continue;
+
+      bar.tick(1);
+      if (!name.length) continue;
+      try {
+        const { type, name, steam_appid, is_free } =
+          await steamApi.getGameDetails(appid);
+
+        if (type === 'game' && is_free)
+          gamesResolved.push({ type, name, steam_appid, is_free });
+      } catch (error: any) {
+        if (error.message === 'Too Many Requests') {
+          Logger.error(error.message, `Next retry in ${UPDATE_DELAY}ms`);
+          setTimeout(() => {
+            Logger.warn(index);
+            LIST_INFO.lastIndex = index - 1;
+            updateDatabase(req, res, index - 1);
+          }, UPDATE_DELAY);
+          break;
         }
-      }, 1000);
-    };
-    iterateThroAllGamesFetch();
-    console.log(allGamesPromises, i);
-    // const resFromChunk = await Promise.all(allGamesPromises);
-    // const xd = resFromChunk.map((promise) => promise.json());
-    // const filteredGames = Object.values(resFromChunk).filter(
-    //   (value) =>
-    //     value?.data?.price_overview?.final_formatted.toLowerCase() === 'free' &&
-    //     value
-    // );
-    // BLOK END
-    res.status(200).json({ allGamesPromises });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'failed to load data' });
+        Logger.info(error.message, `Index: ${index}`, `Appid: ${appid}`);
+      }
+    }
+
+    busy = false;
+    Logger.info('done', LIST_INFO.lastIndex, busy);
+    if (listIndexForRecurse === appListUnSliced.length) {
+      res.status(200).json({ gamesResolved });
+    }
+  } catch (error: any) {
+    Logger.error(error);
+    res.status(400).send(error.message ?? error);
   }
 }
