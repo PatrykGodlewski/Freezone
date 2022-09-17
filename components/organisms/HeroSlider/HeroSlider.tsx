@@ -22,6 +22,7 @@ const HeroContent = [
 const HeroSlider = () => {
   return (
     <div className="flex justify-center gap-4 my-24">
+      <HeroCard dummy={HeroContent.at(0)} />
       {HeroContent.map(
         ({ title, desc, badge }, index): React.ReactNode => (
           <HeroCard
@@ -36,6 +37,7 @@ const HeroSlider = () => {
           />
         )
       )}
+      <HeroCard dummy={HeroContent.at(-1)} />
     </div>
   );
 };

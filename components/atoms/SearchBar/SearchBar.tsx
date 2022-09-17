@@ -3,7 +3,7 @@ import { BiSearch } from 'react-icons/bi';
 
 const input = () => {
   return (
-    <form className="relative w-full max-w-md">
+    <form className="relative w-full max-w-md hidden sm:block">
       <input
         type="text"
         placeholder="Search"

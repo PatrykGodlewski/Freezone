@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
-const useLocalStorage = (key: any, initialValue?: any) => {
+const useLocalStorage = (key: string, initialValue?: string) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       const item = localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return initialValue;
     }
   });
@@ -20,7 +20,7 @@ const useLocalStorage = (key: any, initialValue?: any) => {
 
       localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
   return [storedValue, setValue];

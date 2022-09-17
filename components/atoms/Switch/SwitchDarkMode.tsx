@@ -2,7 +2,7 @@ import { Context } from '@utils/Context';
 import React, { useContext, useEffect, useState } from 'react';
 import styles from '../../../styles/Switch.module.css';
 
-const SwitchDarkMode = () => {
+const SwitchDarkMode = ({ className }) => {
   const { enabled, setEnabled } = useContext(Context);
   const { shape, moon, sun, ray } = styles;
   const [shapeDM, setShapeDM] = useState(moon);
@@ -14,7 +14,7 @@ const SwitchDarkMode = () => {
 
   return (
     <button
-      className={`${styles['theme-toggle--button']} bg-gray-800 dark:bg-gray-100 rounded p-4 shadow flex justify-center items-center ring-hover-effect`}
+      className={`${styles['theme-toggle--button']} bg-gray-800 dark:bg-gray-100 rounded p-4 shadow flex justify-center items-center ring-hover-effect ${className}`}
       onClick={() => setEnabled((prev: boolean) => !prev)}
     >
       <span className={`${shape} ${shapeDM} `}></span>

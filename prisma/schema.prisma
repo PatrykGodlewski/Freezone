@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -10,9 +10,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model steamGames {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
-  app_id         String    @unique
-  is_free        Boolean
-  price          String
+model steam_games {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  app_id       BigInt   @unique
+  is_free      Boolean
+  game_name    String
+  description  String
+  images       Json
+  release_date DateTime
+  date         DateTime @updatedAt
+}
+
+model epic_games {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  app_id      String   @unique
+  is_free     Boolean
+  game_name   String
+  images      Json
+  url_slug    String
+  description String
+  date        DateTime @updatedAt
 }

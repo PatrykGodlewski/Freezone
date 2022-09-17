@@ -1,20 +1,23 @@
 import Button from '@components/atoms/Button/Button';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 
 type PropsType = {
   title?: string;
-  id?: string;
+  id?: string | number;
   description?: string;
   type: 'trail' | 'game';
+  heroImg?: string;
+  free?: boolean;
 };
 
-const Card = ({ title, id, description, type }: PropsType) => {
+const Card = ({ title, description, type, heroImg, id, free }: PropsType) => {
   return (
     <>
       {type === 'game' && (
-        <li className="cursor-pointer ring-hover-effect rounded shadow bg-gray-50 dark:bg-gray-800 flex flex-col">
+        <li className="ring-hover-effect rounded shadow bg-gray-50 dark:bg-gray-800 flex flex-col">
           <div className="focus:focus-visible:outline focus:focus-visible:outline-2 focus:focus-visible:outline-gray-50 focus:focus-visible:outline-offset-4 rounded">
             <div className="flex flex-col gap-4 p-4 ">
               <div>
@@ -26,23 +29,34 @@ const Card = ({ title, id, description, type }: PropsType) => {
                 </Button>
               </div>
               <div className="relative">
-                <h2 className="font-bold text-2xl absolute left-4 top-4">{`${title} - #${id}`}</h2>
-                <img
-                  src={'https://via.placeholder.com/468x600'}
-                  alt="Game preview img"
+                <Image
+                  src={`${heroImg}`}
+                  height={600}
+                  width={468}
+                  alt="Game preview image"
                   className="rounded"
                 />
               </div>
-              <Link href={`/gamedetails/${id}`}>
-                <a className="block w-full">
-                  <Button
-                    type="full"
-                    className="flex justify-between px-4 w-full"
-                  >
-                    <span>Check out</span> <p>FREE</p>
-                  </Button>
-                </a>
-              </Link>
+              <h2 className="font-bold text-base -mt-2 z-10">{title}</h2>
+              {free ? (
+                <Link href={`/gamedetails/${id}`}>
+                  <a className="block w-full">
+                    <Button
+                      type="full"
+                      className="flex justify-between px-4 w-full"
+                    >
+                      <span>Check out</span> <p>FREE</p>
+                    </Button>
+                  </a>
+                </Link>
+              ) : (
+                <Button
+                  type="outline"
+                  className="flex justify-between px-4 w-full"
+                >
+                  <span>Unavilable yet</span>
+                </Button>
+              )}
             </div>
           </div>
         </li>
