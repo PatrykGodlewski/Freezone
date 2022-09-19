@@ -11,14 +11,13 @@ import MobileMenu from '@components/molecules/MobileMenu';
 const Navbar = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
 
-  const handleMobileMenu = (e) => {
+  const handleMobileMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
     setMobileMenu((prev) => !prev);
-    console.log('xddddddddddddd');
   };
 
   return (
     <nav
-      className={`bg-transparent border-gray-200 px-2 sm:px-4 py-8 sticky top-0 z-50 transition dark:bg-gray-900 bg-white bg-opacity-80 backdrop-blur-md`}
+      className={`bg-transparent border-gray-200 px-2 sm:px-4 py-8 sticky top-0 z-50 transition dark:bg-gray-900 dark:bg-opacity-90 bg-white bg-opacity-90 backdrop-blur-md`}
     >
       <div className="container flex justify-between items-center mx-auto md:flex-wrap flex-nowrap">
         <div className=" flex gap-4">
@@ -36,7 +35,7 @@ const Navbar = () => {
           <SwitchDarkMode className="hidden md:flex" />
 
           <Button
-            className={`w-11 h-11 flex justify-center items-center hidden md:flex`}
+            className={`w-11 h-11 justify-center items-center hidden md:flex`}
             type="full"
           >
             <IoSettingsSharp size={'20px'} />

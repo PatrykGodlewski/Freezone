@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react';
 const useLocalStorage = (key: string, initialValue?: string) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
+      if (typeof window !== 'undefined') {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : initialValue;
+      }
     } catch (error) {
       console.error(error);
       return initialValue;
@@ -17,8 +19,9 @@ const useLocalStorage = (key: string, initialValue?: string) => {
         value instanceof Function ? value(storedValue) : value;
 
       setStoredValue(valueToStore);
-
-      localStorage.setItem(key, JSON.stringify(valueToStore));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(key, JSON.stringify(valueToStore));
+      }
     } catch (error) {
       console.error(error);
     }
@@ -27,8 +30,7 @@ const useLocalStorage = (key: string, initialValue?: string) => {
 };
 
 const useDarkMode = () => {
-  const [enabled, setEnabled] = useLocalStorage('dark-theme');
-  const isEnabled = typeof enabledState === 'undefined' && enabled;
+  const [isEnabled, setIsEnabled] = useLocalStorage('dark-theme');
 
   useEffect(() => {
     const className = 'dark';
@@ -37,9 +39,9 @@ const useDarkMode = () => {
     isEnabled
       ? htmlTagClassList.add(className)
       : htmlTagClassList.remove(className);
-  }, [enabled, isEnabled]);
+  }, [isEnabled]);
 
-  return [enabled, setEnabled];
+  return [isEnabled, setIsEnabled];
 };
 
 export default useDarkMode;

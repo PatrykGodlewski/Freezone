@@ -1,16 +1,15 @@
-import { Context } from '@utils/Context';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../../../styles/Switch.module.css';
+import useDarkMode from '@utils/customHooks/useDarkMode';
 
-const SwitchDarkMode = ({ className }) => {
-  const { enabled, setEnabled } = useContext(Context);
+const SwitchDarkMode = ({ className }: { className: string }) => {
   const { shape, moon, sun, ray } = styles;
+  const [enabled, setEnabled] = useDarkMode();
   const [shapeDM, setShapeDM] = useState(moon);
 
   useEffect(() => {
-    if (enabled) setShapeDM(sun);
-    if (!enabled) setShapeDM(moon);
-  }, [enabled]);
+    setShapeDM(enabled ? sun : moon);
+  }, [enabled, sun, moon]);
 
   return (
     <button

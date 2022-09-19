@@ -1,6 +1,10 @@
 import React from 'react';
 
-const MobileMenuButton = ({ onClick }) => {
+type Props = {
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+};
+
+const MobileMenuButton = ({ onClick }: Props) => {
   return (
     <div className="flex items-center md:hidden">
       <button
