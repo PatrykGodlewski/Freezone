@@ -1,5 +1,8 @@
+import type { GameType } from 'types/GameType';
+
 import Card from '@components/molecules/Card/Card';
 import React from 'react';
+import { GameTypes } from '@constants/gameTypes';
 
 type GameArgs = {
   game_name: string;
@@ -10,9 +13,10 @@ type GameArgs = {
 type Props = {
   title: string;
   games: Array<GameArgs>;
+  typeGame: GameType;
 };
 
-const PromotedFreeGames = ({ games, title }: Props) => {
+const PromotedFreeGames = ({ games, title, typeGame }: Props) => {
   return (
     <div className="px-8">
       <h1>{title}</h1>
@@ -22,7 +26,14 @@ const PromotedFreeGames = ({ games, title }: Props) => {
             { game_name, images, app_id, is_free }: GameArgs,
             index: number
           ): React.ReactNode => {
-            const parsedImages = JSON.parse(images);
+            let img_url;
+            if (typeGame === GameTypes.EPIC_GAMES) {
+              const parsed = JSON.parse(images);
+              img_url = parsed.tall_img.url;
+            }
+            if (typeGame === GameTypes.STEAM) {
+              img_url = images;
+            }
             return (
               <Card
                 type={'game'}
@@ -30,8 +41,9 @@ const PromotedFreeGames = ({ games, title }: Props) => {
                 key={index}
                 title={game_name}
                 description={'description'}
-                heroImg={parsedImages.tall_img.url}
+                heroImg={img_url}
                 free={is_free}
+                typeGame={typeGame}
               />
             );
           }

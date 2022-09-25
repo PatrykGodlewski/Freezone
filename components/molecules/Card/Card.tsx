@@ -1,4 +1,5 @@
 import Button from '@components/atoms/Button/Button';
+import { GameTypes } from '@constants/gameTypes';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -13,7 +14,7 @@ type PropsType = {
   free?: boolean;
 };
 
-const Card = ({ title, description, type, heroImg, id, free }: PropsType) => {
+const Card = ({ title, type, heroImg, id, free, typeGame }: PropsType) => {
   return (
     <>
       {type === 'game' && (
@@ -39,7 +40,7 @@ const Card = ({ title, description, type, heroImg, id, free }: PropsType) => {
               </div>
               <h2 className="font-bold text-base -mt-2 z-10">{title}</h2>
               {free ? (
-                <Link href={`/gamedetails/${id}`}>
+                <Link href={`/gamedetails/${id}?game_type=${typeGame}`}>
                   <a className="block w-full">
                     <Button
                       type="full"

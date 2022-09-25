@@ -2,21 +2,29 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import ProgressBar from 'progress';
 import SteamAPI from 'steamapi';
-import fs from 'fs';
 
+import IgnoreFile from '@utils/IgnoreFile';
 import Logger from '@utils/Logger';
+import { errorHandler } from '@utils/ErrorHandler.helper';
 import { db } from '@utils/db.server';
 import { REQUEST_METHODS, REQUEST_HEADERS } from '@constants/apiRequests';
-import dataImportedFromTempAppIdsToIgnore from '../../temp/appIdsToIgnore.json';
 
-type DATA_TO_IGNORE_TYPE = { index: number; appid: number; found?: boolean };
+type ReleaseDateType = {
+  type: string;
+  short_description: string;
+  release_date: {
+    date: string;
+  };
+  name: string;
+  steam_appid: number;
+  is_free: boolean;
+  header_image: JSON;
+};
 
 const UPDATE_DELAY = 5 * 60 * 1000;
 
-const steamApi = new SteamAPI(process.env.STEAM_API_KEY);
-const dataToIgnore: Array<DATA_TO_IGNORE_TYPE> = [
-  ...dataImportedFromTempAppIdsToIgnore,
-];
+const steamApi = new SteamAPI(process.env.STEAM_API_KEY ?? '');
+const ignoreFiles = new IgnoreFile();
 
 let busy = false;
 let bar: ProgressBar;
@@ -26,6 +34,14 @@ const makeLoadingBar = (barLenght: number) => {
     total: barLenght,
     width: 30,
   });
+};
+
+const recurse = (req: NextApiRequest, res: NextApiResponse, index: number) => {
+  setTimeout(() => {
+    busy = false;
+    updateDatabase(req, res, index - 1);
+  }, UPDATE_DELAY);
+  ignoreFiles.saveTemp();
 };
 
 export default async function updateDatabase(
@@ -54,7 +70,7 @@ export default async function updateDatabase(
       bar.tick(1);
 
       try {
-        const isAppNotFound = dataToIgnore.find((elem) => elem.appid === appid);
+        const isAppNotFound = ignoreFiles.find(appid);
         if (isAppNotFound instanceof Object) continue;
 
         const isGame = await db.steam_games.findUnique({
@@ -62,33 +78,12 @@ export default async function updateDatabase(
             app_id: appid,
           },
         });
+
         if (isGame instanceof Object) {
           //check date if longer than a week make update request
-          if (!isGame.release_date) {
-            const {
-              short_description,
-              release_date,
-              name,
-              steam_appid,
-              is_free,
-              header_image,
-            } = await steamApi.getGameDetails(appid);
-            await db.steam_games.update({
-              where: {
-                app_id: appid,
-              },
-              data: {
-                game_name: name,
-                app_id: steam_appid,
-                is_free,
-                images: header_image,
-                release_date: new Date(release_date.date),
-                description: short_description ?? '',
-              },
-            });
-          }
-          continue;
         }
+
+        const game = await steamApi.getGameDetails(appid);
 
         const {
           type,
@@ -98,7 +93,7 @@ export default async function updateDatabase(
           steam_appid,
           is_free,
           header_image,
-        } = await steamApi.getGameDetails(appid);
+        } = game as ReleaseDateType;
 
         if (type === 'game' && is_free) {
           await db.steam_games.create({
@@ -106,31 +101,27 @@ export default async function updateDatabase(
               game_name: name,
               app_id: steam_appid,
               is_free,
-              images: header_image,
-              release_date: new Date(release_date.date),
-              description: short_description ?? '',
+              images: JSON.stringify(header_image),
+              release_date: release_date.date,
+              description: short_description,
             },
           });
         } else {
-          dataToIgnore.push({ index, appid, found: true });
+          ignoreFiles.add({ index, appid, found: true });
         }
-      } catch (error: any) {
-        if (error.message === 'Too Many Requests') {
-          Logger.error(error.message, `Next retry in ${UPDATE_DELAY}ms`);
-          setTimeout(() => {
-            busy = false;
-            updateDatabase(req, res, index - 1);
-          }, UPDATE_DELAY);
-          fs.writeFileSync(
-            './temp/appIdsToIgnore.json',
-            JSON.stringify(dataToIgnore)
-          );
+      } catch (error) {
+        const message = errorHandler(error);
+        if (message === 'Too Many Requests') {
+          Logger.error(message, `Next retry in ${UPDATE_DELAY}ms`);
+          recurse(req, res, index);
           break;
         }
-        Logger.info(error.message, `Index: ${index}`, `Appid: ${appid}`);
-        if (error.message === 'App not found') {
-          dataToIgnore.push({ index, appid });
+        if (message === 'App not found') {
+          Logger.info(message, `Index: ${index}`, `Appid: ${appid}`);
+          ignoreFiles.add({ index, appid });
+          continue;
         }
+        Logger.info(message, `Index: ${index}`, `Appid: ${appid}`);
       }
     }
 
@@ -138,8 +129,9 @@ export default async function updateDatabase(
       busy = false;
       res.status(200).send('200 - succes');
     }
-  } catch (error: any) {
-    Logger.error(error);
-    res.status(400).send(error.message ?? error);
+  } catch (error) {
+    const message = errorHandler(error);
+    Logger.error(message);
+    res.status(400).send(message ?? error);
   }
 }
