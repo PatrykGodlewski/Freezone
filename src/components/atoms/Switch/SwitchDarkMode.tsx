@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import styles from '../../../styles/Switch.module.css';
-import useDarkMode from '@utils/customHooks/useDarkMode';
+import styles from "@styles/Switch.module.css";
+import useDarkMode from "@utils/useDarkMode";
+import { useEffect, useState } from "react";
 
 const SwitchDarkMode = ({ className }: { className: string }) => {
   const { shape, moon, sun, ray } = styles;
@@ -13,7 +13,7 @@ const SwitchDarkMode = ({ className }: { className: string }) => {
 
   return (
     <button
-      className={`${styles['theme-toggle--button']} bg-gray-800 dark:bg-gray-100 rounded p-4 shadow flex justify-center items-center ring-hover-effect ${className}`}
+      className={`${styles["theme-toggle--button"]} ring-hover-effect flex items-center justify-center rounded bg-gray-800 p-4 shadow dark:bg-gray-100 ${className}`}
       onClick={() => setEnabled((prev: boolean) => !prev)}
     >
       <span className={`${shape} ${shapeDM} `}></span>
