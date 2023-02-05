@@ -1,8 +1,6 @@
-import React from 'react';
-
 const Footer = () => {
   return (
-    <footer className="w-full flex justify-center">Freezone&trade;</footer>
+    <footer className="flex w-full justify-center py-2">Freezone&trade;</footer>
   );
 };
 

@@ -1,23 +1,21 @@
 import { type NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 
-import PromotedFreeGames from "../components/organisms/PromotedFreeGames";
+import PromotedFreeGames from "@components/organisms/PromotedFreeGames";
 import { api } from "../utils/api";
-
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const EpicGames = api.games.getEpicGames.useQuery();
+  const SteamGames = api.games.getSteamGames.useQuery();
 
   return (
     <>
       {/* <HeroSlider /> */}
       <PromotedFreeGames
-        games={[]}
-        typeGame={""}
+        games={EpicGames.data ?? []}
         title={"Epic Store Free Games - Limited Time"}
       />
       <PromotedFreeGames
-        games={[]}
-        typeGame={""}
+        games={SteamGames.data ?? []}
         title={"4 Random Steam Free Games"}
       />
       {/* <PromotedFreeGames games={} /> */}

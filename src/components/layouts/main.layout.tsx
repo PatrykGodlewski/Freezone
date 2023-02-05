@@ -1,7 +1,7 @@
-import Footer from '@components/organisms/Footer';
-import Navbar from '@components/organisms/Navbar';
-import Head from 'next/head';
-import React from 'react';
+import Footer from "@components/organisms/Footer";
+import Navbar from "@components/organisms/Navbar";
+import Head from "next/head";
+import React from "react";
 
 type PropTypes = {
   children: React.ReactNode;
@@ -19,7 +19,9 @@ export default function Layout({ children }: PropTypes) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <main className="container mx-auto">{children}</main>
+      <main className="container mx-auto min-h-[calc(100vh-112px-40px)]">
+        {children}
+      </main>
       <Footer />
     </>
   );

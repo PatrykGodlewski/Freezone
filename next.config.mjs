@@ -14,5 +14,8 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ["cdn1.epicgames.com", "cdn.akamai.steamstatic.com"],
+  },
 };
 export default config;

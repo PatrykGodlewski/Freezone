@@ -1,52 +1,52 @@
-import Button from '@components/atoms/Button/Button';
-import { GameTypes } from '@constants/gameTypes';
-import Image from 'next/image';
-import Link from 'next/link';
-import React from 'react';
-import { BsThreeDots } from 'react-icons/bs';
+import Button from "@components/atoms/Button/Button";
+import Image from "next/image";
+import Link from "next/link";
+import { BsThreeDots } from "react-icons/bs";
 
 type PropsType = {
   title?: string;
-  id?: string | number;
+  gameId?: string;
   description?: string;
-  type: 'trail' | 'game';
+  type: "trail" | "game";
   heroImg?: string;
   free?: boolean;
+  typeGame?: string;
 };
 
-const Card = ({ title, type, heroImg, id, free, typeGame }: PropsType) => {
+const Card = ({ title, type, heroImg, gameId, free, typeGame }: PropsType) => {
   return (
     <>
-      {type === 'game' && (
-        <li className="ring-hover-effect rounded shadow bg-gray-50 dark:bg-gray-800 flex flex-col">
-          <div className="focus:focus-visible:outline focus:focus-visible:outline-2 focus:focus-visible:outline-gray-50 focus:focus-visible:outline-offset-4 rounded">
-            <div className="flex flex-col gap-4 p-4 ">
-              <div>
+      {type === "game" && (
+        <li className="ring-hover-effect flex flex-col rounded bg-gray-50 shadow dark:bg-gray-800">
+          <div className="h-full rounded focus:focus-visible:outline focus:focus-visible:outline-2 focus:focus-visible:outline-offset-4 focus:focus-visible:outline-gray-50">
+            <div className="flex h-full flex-col justify-between gap-4 p-4 ">
+              <div className="flex flex-col gap-4">
                 <Button
                   type="full"
-                  className="w-8 h-8 flex items-center justify-center"
+                  className="flex h-8 w-8 items-center justify-center"
                 >
-                  <BsThreeDots height={'24px'} />
+                  <BsThreeDots height={"24px"} />
                 </Button>
+
+                <div className="relative">
+                  <Image
+                    src={`${heroImg}`}
+                    height={600}
+                    width={468}
+                    alt="Game preview image"
+                    className="rounded"
+                  />
+                </div>
+                <h2 className="z-10 -mt-2 text-base font-bold">{title}</h2>
               </div>
-              <div className="relative">
-                <Image
-                  src={`${heroImg}`}
-                  height={600}
-                  width={468}
-                  alt="Game preview image"
-                  className="rounded"
-                />
-              </div>
-              <h2 className="font-bold text-base -mt-2 z-10">{title}</h2>
-              {free ? (
+              {free && gameId ? (
                 <Link
-                  href={`/gamedetails/${id}?game_type=${typeGame}`}
+                  href={`/gamedetails/${gameId}?game_type=${typeGame}`}
                   className="block w-full"
                 >
                   <Button
                     type="full"
-                    className="flex justify-between px-4 w-full"
+                    className="flex w-full justify-between px-4"
                   >
                     <span>Check out</span> <p>FREE</p>
                   </Button>
@@ -54,7 +54,7 @@ const Card = ({ title, type, heroImg, id, free, typeGame }: PropsType) => {
               ) : (
                 <Button
                   type="outline"
-                  className="flex justify-between px-4 w-full"
+                  className="flex w-full justify-between px-4"
                 >
                   <span>Unavilable yet</span>
                 </Button>
@@ -63,9 +63,9 @@ const Card = ({ title, type, heroImg, id, free, typeGame }: PropsType) => {
           </div>
         </li>
       )}
-      {type === 'trail' && (
-        <li className="ring-hover-effect rounded shadow bg-gray-100 dark:bg-gray-800 flex flex-col sm:col-span-2 lg:col-span-2 xl:col-span-1">
-          <div className="p-8 flex flex-col justify-center h-full ">
+      {type === "trail" && (
+        <li className="ring-hover-effect flex flex-col rounded bg-gray-100 shadow dark:bg-gray-800 sm:col-span-2 lg:col-span-2 xl:col-span-1">
+          <div className="flex h-full flex-col justify-center p-8 ">
             <Button type="outline">Show more</Button>
           </div>
         </li>

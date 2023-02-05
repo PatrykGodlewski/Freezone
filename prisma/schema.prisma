@@ -1,13 +1,11 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Game {
@@ -16,9 +14,9 @@ model Game {
   game_type    String
   game_vendor  String
   game_name    String
-  description  String    @db.LongText()
+  description  String
   is_free      Boolean
-  images       Json      @db.Json()
+  images       Json
   url_slug     String?
   release_date DateTime?
   date         DateTime  @updatedAt
